@@ -75,7 +75,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   labelText: 'Phone Number',
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your phone number';
@@ -93,6 +92,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   }
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green, // ✅ Green Button
+                  foregroundColor: Colors.white, // ✅ White Text
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 child: const Text('Register'),
               ),
             ],

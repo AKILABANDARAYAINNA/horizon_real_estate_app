@@ -24,7 +24,8 @@ class PostAdScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post Your Ad'),
-        backgroundColor: const Color.fromARGB(255, 0, 110, 4),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -123,7 +124,8 @@ class PostAdScreen extends StatelessWidget {
                     icon: const Icon(Icons.camera_alt), // Camera icon
                     label: const Text('Add Images'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 0, 110, 4),
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -142,7 +144,8 @@ class PostAdScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                    backgroundColor: const Color.fromARGB(255, 0, 110, 4),
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
                   ),
                   child: const Text('Submit Ad', style: TextStyle(fontSize: 16)),
                 ),

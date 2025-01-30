@@ -4,7 +4,7 @@ import '../widgets/bottom_nav_widget.dart';
 class AgentsScreen extends StatelessWidget {
   const AgentsScreen({super.key});
 
-  // ✅ Sample Agents Data
+  // Sample Agents Data
   final List<Map<String, dynamic>> agents = const [
     {
       'name': 'Arjun',
@@ -40,16 +40,21 @@ class AgentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Detect screen orientation
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final columns = isLandscape ? 3 : 2; // 3 columns in landscape, 2 in portrait
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Our Agents'),
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // ✅ 2 Cards Per Row
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: columns, // Adjust columns dynamically
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             childAspectRatio: 0.8,
@@ -65,12 +70,12 @@ class AgentsScreen extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: const Footer(currentIndex: 3),
+      bottomNavigationBar: const Footer(currentIndex: 3), // Highlight "Agents" tab
     );
   }
 }
 
-// ✅ Separate Widget for Agent Card
+// Agent Card Widget
 class AgentCard extends StatelessWidget {
   final String name;
   final String imageUrl;
@@ -93,7 +98,7 @@ class AgentCard extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(imageUrl),
-            radius: 50, // ✅ Circular Profile Image
+            radius: 50, // Circular profile image
             onBackgroundImageError: (_, __) => const Icon(
               Icons.person,
               size: 50,
@@ -109,7 +114,7 @@ class AgentCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              for (var i = 1; i <= 5; i++)
+              for (var i = 1; i <= 5; i++) // Display stars dynamically based on rating
                 Icon(
                   i <= rating ? Icons.star : Icons.star_border,
                   size: 16,
@@ -124,6 +129,11 @@ class AgentCard extends StatelessWidget {
                 SnackBar(content: Text('Connected with $name')),
               );
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white, // ✅ White Text
+              textStyle: const TextStyle(fontSize: 14),
+            ),
             child: const Text('Connect'),
           ),
         ],

@@ -26,7 +26,8 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Search Properties'),
-        backgroundColor: const Color.fromARGB(255, 0, 110, 4),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.mic),
@@ -88,7 +89,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 ElevatedButton(
                   onPressed: _performSearch, // Perform search
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 0, 110, 4),
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
                   ),
                   child: const Text('Search'),
                 ),

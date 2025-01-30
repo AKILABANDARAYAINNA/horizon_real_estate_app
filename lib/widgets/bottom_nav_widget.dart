@@ -38,15 +38,29 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      backgroundColor: Colors.white, // Background color of navigation bar
+      indicatorColor: Colors.transparent,
       selectedIndex: currentIndex, 
       onDestinationSelected: (index) {
         _navigateToScreen(context, index);
       },
-      destinations: const [
-        NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-        NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
-        NavigationDestination(icon: Icon(Icons.add), label: 'Post Ad'),
-        NavigationDestination(icon: Icon(Icons.group), label: 'Agents'),
+      destinations: [
+        NavigationDestination(
+          icon: Icon(Icons.home, color: currentIndex == 0 ? Colors.green : Colors.grey),
+          label: 'Home',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.search, color: currentIndex == 1 ? Colors.green : Colors.grey),
+          label: 'Search',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.add, color: currentIndex == 2 ? Colors.green : Colors.grey),
+          label: 'Post Ad',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.group, color: currentIndex == 3 ? Colors.green : Colors.grey),
+          label: 'Agents',
+        ),
       ],
     );
   }

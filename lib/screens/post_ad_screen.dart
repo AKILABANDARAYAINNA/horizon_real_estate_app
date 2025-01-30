@@ -6,13 +6,13 @@ class PostAdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>(); // Removed leading underscore
+    final formKey = GlobalKey<FormState>(); 
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
     final TextEditingController priceController = TextEditingController();
     final TextEditingController locationController = TextEditingController();
     String propertyType = 'House';
-    String transactionType = 'For Sale'; // New field for Sale or Rent
+    String transactionType = 'For Sale'; 
 
     // Property type dropdown options
     final List<String> propertyTypes = [
@@ -37,12 +37,12 @@ class PostAdScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: formKey, // Updated variable name
+          key: formKey, 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                controller: titleController, // Updated variable name
+                controller: titleController, 
                 decoration: const InputDecoration(
                   labelText: 'Property Title',
                   border: OutlineInputBorder(),
@@ -56,7 +56,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: descriptionController, // Updated variable name
+                controller: descriptionController, 
                 maxLines: 3,
                 decoration: const InputDecoration(
                   labelText: 'Description',
@@ -71,7 +71,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: priceController, // Updated variable name
+                controller: priceController, 
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Price (LKR)',
@@ -89,7 +89,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: locationController, // Updated variable name
+                controller: locationController, 
                 decoration: const InputDecoration(
                   labelText: 'Location',
                   border: OutlineInputBorder(),
@@ -103,7 +103,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: propertyType, // Updated variable name
+                value: propertyType, 
                 decoration: const InputDecoration(
                   labelText: 'Property Type',
                   border: OutlineInputBorder(),
@@ -140,7 +140,7 @@ class PostAdScreen extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Pretend camera functionality for demo
+                      // Camera functionality for demo
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Camera placeholder')),
                       );
@@ -178,7 +178,7 @@ class PostAdScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const Footer(currentIndex: 2), // Highlight "Post Ad" Tab
+      bottomNavigationBar: const Footer(currentIndex: 2), // Highlighting "Post Ad" Tab
     );
   }
 }

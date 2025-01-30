@@ -12,6 +12,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _budgetController = TextEditingController();
   String _propertyType = 'Any';
+  String _transactionType = 'For Sale'; 
 
   final List<String> propertyTypes = [
     'Any',
@@ -19,6 +20,11 @@ class _SearchScreenState extends State<SearchScreen> {
     'Apartment',
     'Land',
     'Commercial',
+  ];
+
+  final List<String> transactionTypes = [
+    'For Sale',
+    'For Rent',
   ];
 
   @override
@@ -32,7 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
           IconButton(
             icon: const Icon(Icons.mic),
             tooltip: 'Voice Search',
-            onPressed: _handleVoiceSearch, // Voice search button
+            onPressed: _handleVoiceSearch, // Voice search functionality
           ),
         ],
       ),
@@ -64,6 +70,29 @@ class _SearchScreenState extends State<SearchScreen> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
+            ),
+            const SizedBox(height: 10),
+
+            // Transaction Type Dropdown (For Sale or For Rent)
+            DropdownButtonFormField<String>(
+              value: _transactionType,
+              decoration: InputDecoration(
+                labelText: 'Transaction Type',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              items: transactionTypes
+                  .map((type) => DropdownMenuItem(
+                        value: type,
+                        child: Text(type),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _transactionType = value!;
+                });
+              },
             ),
             const SizedBox(height: 10),
 
@@ -133,7 +162,7 @@ class _SearchScreenState extends State<SearchScreen> {
   // Handles Voice Search
   void _handleVoiceSearch() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Voice Search Coming Soon 😊')),
+      const SnackBar(content: Text('Voice Search Coming Soon!')),
     );
   }
 
@@ -142,11 +171,12 @@ class _SearchScreenState extends State<SearchScreen> {
     String location = _searchController.text;
     String budget = _budgetController.text;
     String propertyType = _propertyType;
+    String transactionType = _transactionType;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Searching for $propertyType properties in $location within budget LKR $budget'),
+            'Searching for $transactionType $propertyType properties in $location within budget LKR $budget'),
       ),
     );
   }

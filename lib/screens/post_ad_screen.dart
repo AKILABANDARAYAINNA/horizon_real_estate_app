@@ -6,12 +6,12 @@ class PostAdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    final TextEditingController _titleController = TextEditingController();
-    final TextEditingController _descriptionController = TextEditingController();
-    final TextEditingController _priceController = TextEditingController();
-    final TextEditingController _locationController = TextEditingController();
-    String _propertyType = 'House';
+    final formKey = GlobalKey<FormState>(); // Removed leading underscore
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController priceController = TextEditingController();
+    final TextEditingController locationController = TextEditingController();
+    String propertyType = 'House';
 
     // Property type dropdown options
     final List<String> propertyTypes = [
@@ -29,12 +29,12 @@ class PostAdScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey, // Updated variable name
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                controller: _titleController,
+                controller: titleController, // Updated variable name
                 decoration: const InputDecoration(
                   labelText: 'Property Title',
                   border: OutlineInputBorder(),
@@ -48,7 +48,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _descriptionController,
+                controller: descriptionController, // Updated variable name
                 maxLines: 3,
                 decoration: const InputDecoration(
                   labelText: 'Description',
@@ -63,7 +63,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _priceController,
+                controller: priceController, // Updated variable name
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Price (LKR)',
@@ -81,7 +81,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _locationController,
+                controller: locationController, // Updated variable name
                 decoration: const InputDecoration(
                   labelText: 'Location',
                   border: OutlineInputBorder(),
@@ -95,7 +95,7 @@ class PostAdScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _propertyType,
+                value: propertyType, // Updated variable name
                 decoration: const InputDecoration(
                   labelText: 'Property Type',
                   border: OutlineInputBorder(),
@@ -107,7 +107,7 @@ class PostAdScreen extends StatelessWidget {
                         ))
                     .toList(),
                 onChanged: (value) {
-                  _propertyType = value!;
+                  propertyType = value!;
                 },
               ),
               const SizedBox(height: 16),
@@ -134,7 +134,7 @@ class PostAdScreen extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
+                    if (formKey.currentState?.validate() ?? false) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Ad Submitted Successfully!')),
                       );

@@ -32,75 +32,80 @@ class _SearchScreenState extends State<SearchScreen> {
           IconButton(
             icon: const Icon(Icons.mic),
             tooltip: 'Voice Search',
-            onPressed: _handleVoiceSearch, // voice search
+            onPressed: _handleVoiceSearch, // Voice search button
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Location...',
-                    prefixIcon: const Icon(Icons.location_on),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            // Location Input Field
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Location...',
+                prefixIcon: const Icon(Icons.location_on),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _budgetController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'Budget (LKR)',
-                    prefixIcon: const Icon(Icons.monetization_on),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  value: _propertyType,
-                  decoration: InputDecoration(
-                    labelText: 'Property Type',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  items: propertyTypes
-                      .map((type) => DropdownMenuItem(
-                            value: type,
-                            child: Text(type),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _propertyType = value!;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _performSearch, 
-                  style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Search'),
-                ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5, // Replacing with dynamic results
+            const SizedBox(height: 10),
+
+            // Budget Input Field
+            TextField(
+              controller: _budgetController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Budget (LKR)',
+                prefixIcon: const Icon(Icons.monetization_on),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Property Type Dropdown
+            DropdownButtonFormField<String>(
+              value: _propertyType,
+              decoration: InputDecoration(
+                labelText: 'Property Type',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              items: propertyTypes
+                  .map((type) => DropdownMenuItem(
+                        value: type,
+                        child: Text(type),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _propertyType = value!;
+                });
+              },
+            ),
+            const SizedBox(height: 10),
+
+            // Search Button
+            ElevatedButton(
+              onPressed: _performSearch,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Search'),
+            ),
+            const SizedBox(height: 10),
+
+            // Dynamic Results Section
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 5, 
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
@@ -118,19 +123,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 );
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: const Footer(currentIndex: 1),
     );
   }
 
+  // Handles Voice Search
   void _handleVoiceSearch() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Voice Search Coming Soon!')),
+      const SnackBar(content: Text('Voice Search Coming Soon 😊')),
     );
   }
 
+  // Handles Search Button Click
   void _performSearch() {
     String location = _searchController.text;
     String budget = _budgetController.text;

@@ -93,8 +93,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // ✅ Green Button
-                  foregroundColor: Colors.white, // ✅ White Text
+                  backgroundColor: Colors.green, 
+                  foregroundColor: Colors.white, 
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   shape: RoundedRectangleBorder(

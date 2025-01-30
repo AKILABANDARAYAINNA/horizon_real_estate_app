@@ -11,40 +11,77 @@ class PropertyDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(property['title']!),
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              property['image']!,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.broken_image, size: 200, color: Colors.grey);
-              },
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                property['image']!,
+                height: 250,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.broken_image, size: 250, color: Colors.grey);
+                },
+              ),
             ),
             const SizedBox(height: 16),
             Text(
               property['title']!,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
             Text(
-              'Location: ${property['location']}',
+              property['location']!,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 8),
             Text(
-              'Price: ${property['price']}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              property['price']!,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
             ),
             const SizedBox(height: 16),
-            Text(
-              property['description']!,
-              style: const TextStyle(fontSize: 16),
+
+            // ExpansionTile for Additional Details as Another Component Type
+            ExpansionTile(
+              title: const Text("Additional Details"),
+              leading: const Icon(Icons.info_outline, color: Colors.green), 
+              children: const [
+                ListTile(
+                  title: Text("Land Area: 20 Perches"),
+                ),
+                ListTile(
+                  title: Text("Year Built: 2019"),
+                ),
+                ListTile(
+                  title: Text("Parking Spaces: 2"),
+                ),
+                ListTile(
+                  title: Text("Ownership: Freehold"),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Contacting Seller...')),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green, 
+                  foregroundColor: Colors.white, 
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                child: const Text("Contact Seller"),
+              ),
             ),
           ],
         ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_widget.dart';
+import '../widgets/fade_page_route.dart'; 
 import 'login_screen.dart';
-import 'property_details_screen.dart'; // Import Property Details Screen
+import 'property_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -54,7 +55,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-    final columns = isLandscape ? 3 : 2;
+    final columns = isLandscape ? 3 : 2; 
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +69,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                FadePageRoute(page: const LoginScreen()), // Transition
               );
             },
           ),
@@ -94,8 +95,8 @@ class HomeScreen extends StatelessWidget {
               onViewDetails: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => PropertyDetailsScreen(property: property),
+                  FadePageRoute( // Transition
+                    page: PropertyDetailsScreen(property: property),
                   ),
                 );
               },
@@ -157,9 +158,9 @@ class PropertyCard extends StatelessWidget {
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: onViewDetails,
-             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green, // ✅ Green Button
-              foregroundColor: Colors.white, // ✅ White Text
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green, 
+              foregroundColor: Colors.white, 
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               shape: RoundedRectangleBorder(

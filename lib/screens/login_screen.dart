@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'register_screen.dart'; // Import register screen
+import 'register_screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -64,8 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // ✅ Green Button
-                  foregroundColor: Colors.white, // ✅ White Text
+                  backgroundColor: Colors.green, 
+                  foregroundColor: Colors.white, 
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   shape: RoundedRectangleBorder(
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Text(
                   "Don't have an account? Register",
                   style: TextStyle(
-                    color: Colors.green, // ✅ Green Register Link
+                    color: Colors.green,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

@@ -9,7 +9,7 @@ class Footer extends StatelessWidget {
   const Footer({super.key, required this.currentIndex});
 
   void _navigateToScreen(BuildContext context, int index) {
-    if (index == currentIndex) return; // Prevent unnecessary navigation
+    if (index == currentIndex) return; // Preventing unnecessary navigation
 
     Widget screen;
     switch (index) {
@@ -38,7 +38,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
-      backgroundColor: Colors.white, // Background color of navigation bar
+      backgroundColor: Colors.white, 
       indicatorColor: Colors.transparent,
       selectedIndex: currentIndex, 
       onDestinationSelected: (index) {

@@ -12,6 +12,7 @@ class PostAdScreen extends StatelessWidget {
     final TextEditingController priceController = TextEditingController();
     final TextEditingController locationController = TextEditingController();
     String propertyType = 'House';
+    String transactionType = 'For Sale'; // New field for Sale or Rent
 
     // Property type dropdown options
     final List<String> propertyTypes = [
@@ -19,6 +20,12 @@ class PostAdScreen extends StatelessWidget {
       'Apartment',
       'Land',
       'Commercial',
+    ];
+
+    // Sale or Rent dropdown options
+    final List<String> transactionTypes = [
+      'For Sale',
+      'For Rent',
     ];
 
     return Scaffold(
@@ -109,6 +116,23 @@ class PostAdScreen extends StatelessWidget {
                     .toList(),
                 onChanged: (value) {
                   propertyType = value!;
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: transactionType, // New dropdown for Sale or Rent
+                decoration: const InputDecoration(
+                  labelText: 'Transaction Type',
+                  border: OutlineInputBorder(),
+                ),
+                items: transactionTypes
+                    .map((type) => DropdownMenuItem(
+                          value: type,
+                          child: Text(type),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  transactionType = value!;
                 },
               ),
               const SizedBox(height: 16),

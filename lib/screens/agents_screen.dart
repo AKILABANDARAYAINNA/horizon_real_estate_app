@@ -40,7 +40,7 @@ class AgentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Detect screen orientation
+    // Detecting screen orientation
     final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final columns = isLandscape ? 3 : 2; // 3 columns in landscape, 2 in portrait
 
@@ -54,7 +54,7 @@ class AgentsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: columns, // Adjust columns dynamically
+            crossAxisCount: columns, // Adjusting columns dynamically
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             childAspectRatio: 0.8,
@@ -70,7 +70,7 @@ class AgentsScreen extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: const Footer(currentIndex: 3), // Highlight "Agents" tab
+      bottomNavigationBar: const Footer(currentIndex: 3), // Highlighting "Agents" tab
     );
   }
 }
@@ -98,7 +98,7 @@ class AgentCard extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(imageUrl),
-            radius: 50, // Circular profile image
+            radius: 50,
             onBackgroundImageError: (_, __) => const Icon(
               Icons.person,
               size: 50,
@@ -114,7 +114,7 @@ class AgentCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              for (var i = 1; i <= 5; i++) // Display stars dynamically based on rating
+              for (var i = 1; i <= 5; i++)
                 Icon(
                   i <= rating ? Icons.star : Icons.star_border,
                   size: 16,
@@ -131,7 +131,7 @@ class AgentCard extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
-              foregroundColor: Colors.white, // ✅ White Text
+              foregroundColor: Colors.white, 
               textStyle: const TextStyle(fontSize: 14),
             ),
             child: const Text('Connect'),

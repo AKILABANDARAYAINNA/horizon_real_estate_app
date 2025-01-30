@@ -32,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
           IconButton(
             icon: const Icon(Icons.mic),
             tooltip: 'Voice Search',
-            onPressed: _handleVoiceSearch, // Placeholder for voice search
+            onPressed: _handleVoiceSearch, // voice search
           ),
         ],
       ),
@@ -87,7 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: _performSearch, // Perform search
+                  onPressed: _performSearch, 
                   style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
@@ -100,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: 5, // Replace with dynamic results
+              itemCount: 5, // Replacing with dynamic results
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
@@ -121,18 +121,16 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const Footer(currentIndex: 1), // ✅ Highlight Search Tab
+      bottomNavigationBar: const Footer(currentIndex: 1),
     );
   }
 
-  // ✅ Placeholder for voice search
   void _handleVoiceSearch() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Voice Search Coming Soon!')),
     );
   }
 
-  // ✅ Placeholder for performing a search
   void _performSearch() {
     String location = _searchController.text;
     String budget = _budgetController.text;
@@ -144,7 +142,5 @@ class _SearchScreenState extends State<SearchScreen> {
             'Searching for $propertyType properties in $location within budget LKR $budget'),
       ),
     );
-
-    // Add actual search logic here
   }
 }

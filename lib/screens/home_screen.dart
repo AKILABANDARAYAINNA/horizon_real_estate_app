@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                       crossAxisCount: 2, // ✅ 2 Cards Per Row
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 0.75, // ✅ Adjusted to Fix Overflow
+                      childAspectRatio: 0.7, // ✅ Adjusted to Fix Overflow
                     ),
                     itemCount: properties.length,
                     itemBuilder: (context, index) {

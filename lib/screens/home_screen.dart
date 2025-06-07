@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         location: property['location'] ?? '',
                         price: 'LKR ${property['price'] ?? '0'}',
                         imageUrl: property['images'] != null && property['images'].isNotEmpty
-                            ? '$baseUrl/public/uploads/properties/${property['images'][0]}'
+                            ? '$baseUrl/uploads/properties/${property['images'][0]}'
                             : '',
                         onViewDetails: () {
                           Navigator.push(

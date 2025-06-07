@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:horizon_real_estate_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

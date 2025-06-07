@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../widgets/bottom_nav_widget.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -12,7 +15,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _budgetController = TextEditingController();
   String _propertyType = 'Any';
-  String _transactionType = 'For Sale'; 
+  String _transactionType = 'For Sale';
 
   final List<String> propertyTypes = [
     'Any',
@@ -27,6 +30,16 @@ class _SearchScreenState extends State<SearchScreen> {
     'For Rent',
   ];
 
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  List<Map<String, dynamic>> _results = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,9 +49,9 @@ class _SearchScreenState extends State<SearchScreen> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: const Icon(Icons.mic),
+            icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
             tooltip: 'Voice Search',
-            onPressed: _handleVoiceSearch, // Voice search functionality
+            onPressed: _handleVoiceSearch,
           ),
         ],
       ),
@@ -46,7 +59,6 @@ class _SearchScreenState extends State<SearchScreen> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            // Location Input Field
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -58,8 +70,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Budget Input Field
             TextField(
               controller: _budgetController,
               keyboardType: TextInputType.number,
@@ -72,8 +82,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Transaction Type Dropdown (For Sale or For Rent)
             DropdownButtonFormField<String>(
               value: _transactionType,
               decoration: InputDecoration(
@@ -95,8 +103,6 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
             const SizedBox(height: 10),
-
-            // Property Type Dropdown
             DropdownButtonFormField<String>(
               value: _propertyType,
               decoration: InputDecoration(
@@ -118,8 +124,6 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
             const SizedBox(height: 10),
-
-            // Search Button
             ElevatedButton(
               onPressed: _performSearch,
               style: ElevatedButton.styleFrom(
@@ -129,29 +133,25 @@ class _SearchScreenState extends State<SearchScreen> {
               child: const Text('Search'),
             ),
             const SizedBox(height: 10),
-
-            // Dynamic Results Section
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: 5, 
-              itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.home),
-                    title: Text('Property ${index + 1}'),
-                    subtitle: const Text('Details about this property...'),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Clicked on Property ${index + 1}'),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+            if (_results.isNotEmpty)
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _results.length,
+                itemBuilder: (context, index) {
+                  final property = _results[index];
+                  return Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.home),
+                      title: Text(property['title'] ?? 'No Title'),
+                      subtitle: Text('${property['location'] ?? ''} - LKR ${property['price'] ?? ''}'),
+                      onTap: () {
+                        // TODO: Navigate to PropertyDetailsScreen
+                      },
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -159,25 +159,45 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // Handles Voice Search
-  void _handleVoiceSearch() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Voice Search Coming Soon!')),
-    );
+  void _handleVoiceSearch() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() => _isListening = true);
+      _speech.listen(onResult: (result) {
+        setState(() {
+          _searchController.text = result.recognizedWords;
+          _isListening = false;
+        });
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Speech recognition not available')),
+      );
+    }
   }
 
-  // Handles Search Button Click
-  void _performSearch() {
-    String location = _searchController.text;
-    String budget = _budgetController.text;
-    String propertyType = _propertyType;
-    String transactionType = _transactionType;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-            'Searching for $transactionType $propertyType properties in $location within budget LKR $budget'),
-      ),
+  void _performSearch() async {
+    final uri = Uri.parse('http://your-laravel-api-url/api/search'); // Replace with your backend API
+    final response = await http.post(
+      uri,
+      headers: {'Accept': 'application/json'},
+      body: {
+        'location': _searchController.text.trim(),
+        'price': _budgetController.text.trim(),
+        'property_type': _propertyType == 'Any' ? '' : _propertyType,
+        'for_sale_or_rent': _transactionType == 'For Sale' ? 'sale' : 'rent',
+      },
     );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        _results = List<Map<String, dynamic>>.from(data['properties']);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No properties found')),
+      );
+    }
   }
 }

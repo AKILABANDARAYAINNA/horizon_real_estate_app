@@ -46,14 +46,44 @@ class _PostAdScreenState extends State<PostAdScreen> {
     }
   }
 
-  Future<void> _pickImages() async {
-    final picker = ImagePicker();
-    final selectedImages = await picker.pickMultiImage();
-    if (selectedImages.isNotEmpty) {
-      setState(() {
-        _images = selectedImages;
-      });
-    }
+  Future<void> _showImageSourceDialog() async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Pick from Gallery'),
+              onTap: () async {
+                Navigator.pop(context);
+                final picker = ImagePicker();
+                final selectedImages = await picker.pickMultiImage();
+                if (selectedImages.isNotEmpty) {
+                  setState(() {
+                    _images = selectedImages;
+                  });
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Take Photo with Camera'),
+              onTap: () async {
+                Navigator.pop(context);
+                final picker = ImagePicker();
+                final cameraImage = await picker.pickImage(source: ImageSource.camera);
+                if (cameraImage != null) {
+                  setState(() {
+                    _images.add(cameraImage);
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _submitForm() async {
@@ -145,9 +175,9 @@ class _PostAdScreenState extends State<PostAdScreen> {
                 title: const Text('Feature on Homepage'),
               ),
               ElevatedButton.icon(
-                onPressed: _pickImages,
+                onPressed: _showImageSourceDialog,
                 icon: const Icon(Icons.image),
-                label: const Text('Pick Images'),
+                label: const Text('Add Property Image'),
               ),
               const SizedBox(height: 10),
               if (_images.isNotEmpty)

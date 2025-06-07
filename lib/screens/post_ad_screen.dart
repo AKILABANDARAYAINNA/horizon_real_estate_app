@@ -120,7 +120,7 @@ class _PostAdScreenState extends State<PostAdScreen> {
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Property posted successfully!')),
+          const SnackBar(content: Text('Property sent for Admin Review, Wait for the Approval!')),
         );
         Navigator.pushReplacement(
           context,

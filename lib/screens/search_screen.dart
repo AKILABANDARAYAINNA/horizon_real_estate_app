@@ -3,6 +3,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../widgets/bottom_nav_widget.dart';
+import '../constants.dart'; // for searchUrl
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -17,18 +18,8 @@ class _SearchScreenState extends State<SearchScreen> {
   String _propertyType = 'Any';
   String _transactionType = 'For Sale';
 
-  final List<String> propertyTypes = [
-    'Any',
-    'House',
-    'Apartment',
-    'Land',
-    'Commercial',
-  ];
-
-  final List<String> transactionTypes = [
-    'For Sale',
-    'For Rent',
-  ];
+  final List<String> propertyTypes = ['Any', 'House', 'Apartment', 'Land', 'Commercial'];
+  final List<String> transactionTypes = ['For Sale', 'For Rent'];
 
   late stt.SpeechToText _speech;
   bool _isListening = false;
@@ -55,104 +46,96 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Location...',
-                prefixIcon: const Icon(Icons.location_on),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+                _searchController.clear();
+                _budgetController.clear();
+                _propertyType = 'Any';
+                _transactionType = 'For Sale';
+                _results.clear();
+              });        
+            },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Location...',
+                  prefixIcon: const Icon(Icons.location_on),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _budgetController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: 'Budget (LKR)',
-                prefixIcon: const Icon(Icons.monetization_on),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _budgetController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Budget (LKR)',
+                  prefixIcon: const Icon(Icons.monetization_on),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              value: _transactionType,
-              decoration: InputDecoration(
-                labelText: 'Transaction Type',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: _transactionType,
+                decoration: InputDecoration(
+                  labelText: 'Transaction Type',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                 ),
+                items: transactionTypes
+                    .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                    .toList(),
+                onChanged: (value) => setState(() => _transactionType = value!),
               ),
-              items: transactionTypes
-                  .map((type) => DropdownMenuItem(
-                        value: type,
-                        child: Text(type),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _transactionType = value!;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              value: _propertyType,
-              decoration: InputDecoration(
-                labelText: 'Property Type',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: _propertyType,
+                decoration: InputDecoration(
+                  labelText: 'Property Type',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                 ),
+                items: propertyTypes
+                    .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                    .toList(),
+                onChanged: (value) => setState(() => _propertyType = value!),
               ),
-              items: propertyTypes
-                  .map((type) => DropdownMenuItem(
-                        value: type,
-                        child: Text(type),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _propertyType = value!;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _performSearch,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: _performSearch,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Search'),
               ),
-              child: const Text('Search'),
-            ),
-            const SizedBox(height: 10),
-            if (_results.isNotEmpty)
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _results.length,
-                itemBuilder: (context, index) {
-                  final property = _results[index];
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.home),
-                      title: Text(property['title'] ?? 'No Title'),
-                      subtitle: Text('${property['location'] ?? ''} - LKR ${property['price'] ?? ''}'),
-                      onTap: () {
-                        // TODO: Navigate to PropertyDetailsScreen
-                      },
-                    ),
-                  );
-                },
-              ),
-          ],
+              const SizedBox(height: 10),
+              if (_results.isNotEmpty)
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _results.length,
+                  itemBuilder: (context, index) {
+                    final property = _results[index];
+                    return Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.home),
+                        title: Text(property['title'] ?? 'No Title'),
+                        subtitle: Text(
+                          '${property['location'] ?? ''} - LKR ${property['price'] ?? ''}',
+                        ),
+                        onTap: () {
+                          // TODO: Navigate to PropertyDetailsScreen
+                        },
+                      ),
+                    );
+                  },
+                ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: const Footer(currentIndex: 1),
@@ -176,27 +159,38 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  void _performSearch() async {
-    final uri = Uri.parse('http://your-laravel-api-url/api/search'); // Replace with your backend API
-    final response = await http.post(
-      uri,
-      headers: {'Accept': 'application/json'},
-      body: {
-        'location': _searchController.text.trim(),
-        'price': _budgetController.text.trim(),
-        'property_type': _propertyType == 'Any' ? '' : _propertyType,
-        'for_sale_or_rent': _transactionType == 'For Sale' ? 'sale' : 'rent',
-      },
-    );
+  Future<void> _performSearch() async {
+    try {
+      final response = await http.post(
+        Uri.parse(searchUrl),
+        headers: {'Accept': 'application/json'},
+        body: {
+          'location': _searchController.text.trim(),
+          'price': _budgetController.text.trim(),
+          'property_type': _propertyType == 'Any' ? '' : _propertyType.toLowerCase(),
+          'for_sale_or_rent': _transactionType == 'For Sale' ? 'sale' : 'rent',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      setState(() {
-        _results = List<Map<String, dynamic>>.from(data['properties']);
-      });
-    } else {
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _results = List<Map<String, dynamic>>.from(data['properties']);
+        });
+
+        if (_results.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No matching properties found')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No properties found')),
+        const SnackBar(content: Text('Failed to connect to server')),
       );
     }
   }

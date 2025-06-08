@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart'; // Geolocation
 import '../widgets/bottom_nav_widget.dart';
 import '../constants.dart'; // for searchUrl
 
@@ -18,6 +19,9 @@ class _SearchScreenState extends State<SearchScreen> {
   String _propertyType = 'Any';
   String _transactionType = 'For Sale';
 
+  bool _useCurrentLocation = false;
+  Position? _currentPosition;
+
   final List<String> propertyTypes = ['Any', 'House', 'Apartment', 'Land', 'Commercial'];
   final List<String> transactionTypes = ['For Sale', 'For Rent'];
 
@@ -29,6 +33,30 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+          return;
+        }
+      }
+
+      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _currentPosition = pos;
+      });
+    } catch (e) {
+      print("Geolocation error: $e");
+    }
   }
 
   @override
@@ -49,20 +77,31 @@ class _SearchScreenState extends State<SearchScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
-                _searchController.clear();
-                _budgetController.clear();
-                _propertyType = 'Any';
-                _transactionType = 'For Sale';
-                _results.clear();
-              });        
-            },
+            _searchController.clear();
+            _budgetController.clear();
+            _propertyType = 'Any';
+            _transactionType = 'For Sale';
+            _results.clear();
+            _useCurrentLocation = false;
+            _currentPosition = null;
+          });
+        },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
+              SwitchListTile(
+                value: _useCurrentLocation,
+                onChanged: (val) async {
+                  setState(() => _useCurrentLocation = val);
+                  if (val) await _getCurrentLocation();
+                },
+                title: const Text("Use Current Location"),
+              ),
               TextField(
                 controller: _searchController,
+                enabled: !_useCurrentLocation,
                 decoration: InputDecoration(
                   hintText: 'Location...',
                   prefixIcon: const Icon(Icons.location_on),
@@ -128,7 +167,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           '${property['location'] ?? ''} - LKR ${property['price'] ?? ''}',
                         ),
                         onTap: () {
-                          // TODO: Navigate to PropertyDetailsScreen
+                          // Optional: Navigate to property details
                         },
                       ),
                     );
@@ -161,16 +200,20 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<void> _performSearch() async {
     try {
-      final response = await http.post(
-        Uri.parse(searchUrl),
-        headers: {'Accept': 'application/json'},
-        body: {
-          'location': _searchController.text.trim(),
-          'price': _budgetController.text.trim(),
-          'property_type': _propertyType == 'Any' ? '' : _propertyType.toLowerCase(),
-          'for_sale_or_rent': _transactionType == 'For Sale' ? 'sale' : 'rent',
-        },
-      );
+      final uri = Uri.parse(searchUrl);
+      final body = {
+        'location': _useCurrentLocation ? '' : _searchController.text.trim(),
+        'price': _budgetController.text.trim(),
+        'property_type': _propertyType == 'Any' ? '' : _propertyType.toLowerCase(),
+        'for_sale_or_rent': _transactionType == 'For Sale' ? 'sale' : 'rent',
+      };
+
+      if (_useCurrentLocation && _currentPosition != null) {
+        body['latitude'] = _currentPosition!.latitude.toString();
+        body['longitude'] = _currentPosition!.longitude.toString();
+      }
+
+      final response = await http.post(uri, headers: {'Accept': 'application/json'}, body: body);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../constants.dart'; // Ensure this has your baseUrl and agent register URL
+import '../constants.dart'; 
 
 class RegisterAgentScreen extends StatefulWidget {
   const RegisterAgentScreen({super.key});
@@ -39,7 +39,7 @@ class _RegisterAgentScreenState extends State<RegisterAgentScreen> {
 
     setState(() => _isLoading = true);
 
-    var uri = Uri.parse('$baseUrl/register-agent'); // Replace with your actual endpoint
+    var uri = Uri.parse('$baseUrl/register-agent'); 
     var request = http.MultipartRequest('POST', uri);
 
     request.fields['name'] = _nameController.text.trim();
@@ -48,7 +48,7 @@ class _RegisterAgentScreenState extends State<RegisterAgentScreen> {
     request.fields['password_confirmation'] = _confirmController.text.trim();
     request.fields['contact_number'] = _contactController.text.trim();
     request.fields['business_area'] = _businessController.text.trim();
-    request.fields['payment_status'] = 'Paid'; // Simulated payment
+    request.fields['payment_status'] = 'Paid'; 
 
     if (_profileImage != null) {
       request.files.add(await http.MultipartFile.fromPath('profile_image', _profileImage!.path));

@@ -1,4 +1,3 @@
-// lib/auth_helper.dart
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<bool> isLoggedIn() async {

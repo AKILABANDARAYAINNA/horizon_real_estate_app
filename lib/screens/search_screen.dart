@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:geolocator/geolocator.dart'; // Geolocation
+import 'package:geolocator/geolocator.dart'; 
 import '../widgets/bottom_nav_widget.dart';
-import '../constants.dart'; // for searchUrl
+import '../constants.dart'; 
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
